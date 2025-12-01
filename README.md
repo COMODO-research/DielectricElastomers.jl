@@ -1,2 +1,2 @@
 # DielectricElastomers.jl
-This project features Julia code for the analysis of the dynamics of dielectric elastomers. 
+This project features Julia code for the analysis of the static and dynamics of dielectric elastomers. 
