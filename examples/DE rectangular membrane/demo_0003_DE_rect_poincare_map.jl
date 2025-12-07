@@ -45,7 +45,7 @@ poincare_points = Y  # each row corresponds to one period
 #scatter(Y, markersize= 10)
 
 fig = Figure(size = (600,400))
-ax = Axis(fig[1, 1], xlabel="displacement", ylabel="velocity")
+ax = Axis(fig[1, 1], xlabel=L"\lambda", ylabel=L"d\lambda/d t")
 scatter!(ax, Y, color = :black, markersize= 10)
 xlims!(ax, [0.0 4.0])
 ylims!(ax,[-2.0 2.0])

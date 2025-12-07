@@ -29,7 +29,7 @@ prob = BifurcationProblem(DE!, z0, par_DE,
 opts_br = ContinuationPar(p_min=0., p_max=1.0, dsmax=0.001, dsmin=1e-6, ds=0.001, max_steps=5000,
     newton_options=NewtonPar(tol=1e-9, max_iterations=100))
 
-br = continuation(prob, PALC(), opts_br; bothside=true)
+br = BifurcationKit.continuation(prob, PALC(), opts_br; bothside=true)
 
 ps = br.param
 xs = br.x
@@ -82,7 +82,7 @@ function plot_first(segs)
     end
 end
 
-plot_(segs)
+plot_first(segs)
 # Extract branch points (bp) only
 # How to find the type:
 # # Iterate over special points
@@ -94,7 +94,7 @@ bps = filter(sp -> sp.type == :bp, br.specialpoint)
 if !isempty(bps)
     x_bp = [ps[sp.idx] for sp in bps]
     y_bp = [xs[sp.idx] for sp in bps]
-    scatter!(ax, y_bp, x_bp; color=:red, markersize=12, label="Branch Point (bp)")
+    scatter!(ax, y_bp, x_bp; color=:red, markersize=12, label="Saddle-node (SN)")
 end
 
 function plot_second(segs)
@@ -130,7 +130,7 @@ bps = filter(sp -> sp.type == :bp, br.specialpoint)
 if !isempty(bps)
     x_bp = [ps[sp.idx] for sp in bps]
     y_bp = [xs[sp.idx] for sp in bps]
-    scatter!(ax2, x_bp, y_bp; color=:red, markersize=12, label="Branch Point (bp)")
+    scatter!(ax2, x_bp, y_bp; color=:red, markersize=12, label="Saddle-node (SN)")
 end
 
 

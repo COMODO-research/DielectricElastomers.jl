@@ -35,6 +35,6 @@ velo = sol[2, :]
 # visualisation 
 ## time history
 fig = Figure(size = (800,600))
-ax1 = Axis(fig[1, 1], xlabel="t", ylabel="displacement")
+ax1 = Axis(fig[1, 1], xlabel=L"t", ylabel=L"\lambda")
 lines!(ax1, t,disp, color = :black, linewidth = 2)
 display(GLMakie.Screen(), fig)

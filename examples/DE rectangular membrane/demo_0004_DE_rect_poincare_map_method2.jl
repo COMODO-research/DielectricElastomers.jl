@@ -25,7 +25,7 @@ function duffing!(dx, x, p, t)
 end
 
 x0 = [1.149; 0.0]
-tspan = (0.0, 400.0)
+tspan = (0.0, 300.0)
 prob = DE.ODEProblem(duffing!, x0, tspan)
 sol = DE.solve(prob,DE.Tsit5(), reltol = 1e-12, abstol = 1e-12)
 # solution = hcat(sol.u...)
@@ -34,16 +34,17 @@ disp = sol[1, :]
 velo = sol[2, :]
 fig = Figure(size = (600,400))
 
-T = 2π/Ω
-num_points = Int(floor(tspan[2]/T))
-poincare_times = T .* (0:num_points)
 
-# interpolate solution at those times
-x1 = [sol(t)[1] for t in poincare_times]
-x2 = [sol(t)[2] for t in poincare_times]
+T = 2π / Ω
+steady_start = 0.0
+n_start = ceil(Int, steady_start / T)
+n_end = floor(Int, tspan[2] / T)
+sample_times = T .* (n_start:n_end)
 
-ax = Axis(fig[1, 1], xlabel="displacement", ylabel="velocity")
-scatter!(ax, x1,x2, markersize= 10)
+disp_poincare = [sol(t)[1] for t in sample_times]
+velo_poincare = [sol(t)[2] for t in sample_times]
+ax = Axis(fig[1, 1], xlabel=L"\lambda", ylabel=L"d\lambda/d t")
+scatter!(ax, disp_poincare,velo_poincare, markersize= 10)
 xlims!(ax, [0.0 4.0])
 ylims!(ax,[-2.0 2.0])
 display(GLMakie.Screen(), fig)
