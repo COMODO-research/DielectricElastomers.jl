@@ -21,7 +21,7 @@ function DielectricElastomer(x, p, t)
 end
 
 u0 = [1.0; 0.0]
-tspan = (0.0, 2000.0)
+tspan = (0.0, 10000.0)
 dt = 0.01
 prob = ODEProblem(DielectricElastomer, u0, tspan)
 sol = solve(prob, Tsit5(), reltol = 1e-12, abstol = 1e-12, saveat=dt)
@@ -36,7 +36,7 @@ ddprob = ContinuousDataDrivenProblem(X, t, DX=DX)
 @parameters t
 @variables u[1:2]
 u = collect(u)
-Ψ = Basis([u; u[1]^2;u[1]^3; (0.1 + 0.1 * sin.(3.58 * t))], u, independent_variable=t)
+Ψ = Basis([u; u[1]^2;u[1]^3; (0.1 + 0.1 * sin.(1.58 * t))], u, independent_variable=t)
 λ = 1e-3
 opt = STLSQ(λ)
 res = solve(ddprob, Ψ, opt)
@@ -53,7 +53,7 @@ discovered_sol = solve(discovered_prob, Tsit5(),reltol = 1e-12, abstol = 1e-12, 
 
 # Time-history plot
 p1 = plot(sol, idxs=1, label="Original x(t)", linestyle=:dash, linewidth = 3)
-plot!(p1, discovered_sol, idxs=1, label="Discovered x(t)", xlimits=(1800,2000))
+plot!(p1, discovered_sol, idxs=1, label="Discovered x(t)", xlimits=(9800,10000))
 xlabel!("Time")
 ylabel!("x")
 title!("Time History Comparison")

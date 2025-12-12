@@ -1,5 +1,6 @@
 using DynamicalSystems
 using Comodo.GLMakie
+import DifferentialEquations as DE
 GLMakie.closeall()
 #=
 Results for the paper:
@@ -31,8 +32,9 @@ end
 x0 = [1.149, 0.0]
 tmax = 300.0
 
+diffeq = (alg = DE.Tsit5(), abstol = 1e-12, reltol = 1e-12)
 # Define system
-ds = ContinuousDynamicalSystem(DE!, x0)
+ds = ContinuousDynamicalSystem(DE!, x0; diffeq)
 
 # Compute trajectory using Δt = forcing period
 Y, t = trajectory(ds, tmax; Δt=T, Ttr= 0.0)
