@@ -3,7 +3,7 @@ using ModelingToolkit
 using DifferentialEquations
 using LinearAlgebra
 using DataDrivenSparse
-using Plots
+using Plots ## here we use Plot
 #gr()
 plotly() 
 function DielectricElastomer(x, p, t)
@@ -24,7 +24,7 @@ u0 = [1.0; 0.0]
 tspan = (0.0, 10000.0)
 dt = 0.01
 prob = ODEProblem(DielectricElastomer, u0, tspan)
-sol = solve(prob, Tsit5(), reltol = 1e-12, abstol = 1e-12, saveat=dt)
+sol = solve(prob, Tsit5(), reltol = 1e-10, abstol = 1e-10, saveat=dt)
 plot(sol)
 X = sol[:, :]
 DX = similar(X)
@@ -49,7 +49,7 @@ discovered_basis = get_basis(res)
 p_discovered = get_parameter_values(discovered_basis)
 discovered_prob = ODEProblem(discovered_basis, u0, tspan, p_discovered)
 # Solve the discovered ODE
-discovered_sol = solve(discovered_prob, Tsit5(),reltol = 1e-12, abstol = 1e-12, saveat= dt)
+discovered_sol = solve(discovered_prob, Tsit5(),reltol = 1e-10, abstol = 1e-10, saveat= dt)
 
 # Time-history plot
 p1 = plot(sol, idxs=1, label="Original x(t)", linestyle=:dash, linewidth = 3)

@@ -1,5 +1,5 @@
 using DynamicalSystems
-using Comodo.GLMakie
+using GLMakie
 import DifferentialEquations as DE
 GLMakie.closeall()
 #=
@@ -14,27 +14,31 @@ disp: displacement
 vel: veclocity
 =#
 # Parameters
-Jm = 100.0
-Ω = 1.58
-Vdc = 0.1
-Vac = 0.1
-P = 0.5
-c = 0.0
 
-T = 2π / Ω  # Forcing period
 
 function DE!(du, u, p, t)
+    (Jm, Ω , Vdc, Vac, P, c) = p 
     du[1] = u[2]
     stiffness = Jm * (u[1] - u[1]^(-5)) / (Jm - 2*u[1]^2 - u[1]^(-4) + 3)
     du[2] = -c * u[2] + P + Vdc*(1 + Vac*sin(Ω*t))^2 * u[1]^3 - stiffness
 end
 
+Jm = 100.0
+Ω = 1.58
+Vdc = 0.1      # (ε*Φdc^2)/(μ*L3^2)
+Vac= 0.1       # (Φac)/(Φdc)
+P = 0.5        # S/μ
+c = 0.0
+p = [Jm, Ω , Vdc, Vac, P, c]
+
+T = 2π/Ω
 x0 = [1.149, 0.0]
 tmax = 300.0
 
-diffeq = (alg = DE.Tsit5(), abstol = 1e-12, reltol = 1e-12)
+### tol decrease simulation run time increae ## tolerance be fixed
+diffeq = (alg = DE.Tsit5(), abstol = 1e-10, reltol = 1e-10)
 # Define system
-ds = ContinuousDynamicalSystem(DE!, x0; diffeq)
+ds = ContinuousDynamicalSystem(DE!, x0, p ; diffeq)
 
 # Compute trajectory using Δt = forcing period
 Y, t = trajectory(ds, tmax; Δt=T, Ttr= 0.0)
@@ -49,6 +53,6 @@ poincare_points = Y  # each row corresponds to one period
 fig = Figure(size = (600,400))
 ax = Axis(fig[1, 1], xlabel=L"\lambda", ylabel=L"d\lambda/d t")
 scatter!(ax, Y, color = :black, markersize= 10)
-xlims!(ax, [0.0 4.0])
-ylims!(ax,[-2.0 2.0])
+xlims!(ax, [0.0 5.0])
+ylims!(ax,[-3.0 3.0])
 display(GLMakie.Screen(), fig)

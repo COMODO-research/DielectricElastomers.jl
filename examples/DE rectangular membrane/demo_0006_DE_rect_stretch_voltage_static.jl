@@ -1,5 +1,5 @@
 using BifurcationKit
-using Comodo.GLMakie
+using GLMakie
 #=
 Result for 
 Method to Control Dynamic Snap-Through Instability of Dielectric Elastomers

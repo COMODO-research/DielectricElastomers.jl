@@ -1,6 +1,7 @@
 using DynamicalSystems
-using Comodo.GLMakie
+using GLMakie
 import DifferentialEquations as DE
+GLMakie.closeall()
 # -----------------------------
 # ODE system
 # -----------------------------
@@ -14,38 +15,36 @@ end
 # -----------------------------
 # Initial conditions & constants
 # -----------------------------
-u0 = [1.4, 0.0]
+u0 = [1.88, 0.0]
 Jm = 100.0
-Ω = 1.58
-Vdc = 0.1
-Vac = 0.5
+Ω = 1.0
+Vdc = 0.3
+c = 0.1
 P = 0.5
 
-T = 2π / Ω  # Forcing period 
+T = 0.1
 # -----------------------------
 # Parameter scan over c
 # -----------------------------
-c_values = 0.0:0.001:0.2
-Lya = zeros(length(c_values))
+Vac_values = 0.0:0.001:0.5
+Lya = zeros(length(Vac_values))
 
-diffeq = (alg = DE.Tsit5(), abstol = 1e-8, reltol = 1e-8)
+diffeq = (alg = DE.Tsit5(), abstol = 1e-10, reltol = 1e-10)
 @info "Computing Lyapunov exponents..."
 
-for (i, c) in enumerate(c_values)
+for (i, Vac) in enumerate(Vac_values)
     p = (Jm, Ω, Vdc, Vac, P, c)
     ds = ContinuousDynamicalSystem(DE!, u0, p; diffeq)
-
-    Lya[i] = lyapunov(ds, 1000.0; Δt=T, Ttr = 600.0)
-
+    Lya[i] = lyapunov(ds, 5000.0; Δt=T, Ttr = 4800.0)
 end
 
 @info "Done."
 
-GLMakie.closeall()
+
 # plot
 fig = Figure(size = (800,600))
 ax1 = Axis(fig[1, 1], xlabel="c", ylabel="Lyapunov exponent")
-lines!(ax1, c_values, Lya, linewidth=2)
+lines!(ax1, Vac_values, Lya, linewidth=2)
 #ylims!(ax1, -.002, 0.02)
 DataInspector(fig) 
 display(fig)
